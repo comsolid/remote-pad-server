@@ -39,6 +39,26 @@ npm start
 It's starts a MQTT Broker on port `1883` and a fallback
 for WebSocket on port `1884`.
 
+## For production
+
+### Install a proccess manager
+
+```bash
+sudo npm install pm2@latest -g
+```
+
+### Start the server
+
+```bash
+pm2 start process.yml
+```
+
+### Monitoring
+
+```bash
+pm2 monit
+```
+
 # SNES Emulator
 
 Higan

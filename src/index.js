@@ -75,3 +75,14 @@ server.on('clientDisconnected', function(client) {
         clients[client.user] = 0
     }
 })
+
+// Graceful Shutdown
+process.on('SIGINT', function() {
+    pino.info('Shutting down Mosca over WebSocket')
+    httpServ.close(function() {
+        pino.info('Shutting down Mosca')
+        server.close(function () {
+            process.exit()
+        })
+    })
+})
