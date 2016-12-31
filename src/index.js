@@ -2,6 +2,7 @@ const pino = require('pino')()
 const robot = require('./robot-race.js')
 const mosca = require('mosca')
 const loadAuthorizer = require('./load-authorizer.js')
+const Client = require('./client.js')
 
 const http = require('http')
 const httpServ = http.createServer()
@@ -36,19 +37,29 @@ const topics = [
     'bob'
 ]
 
-// holds the id created by the mqtt on connect
+// holds the client data and settings
 let clients = {
-    alice: 0,
-    bob: 0
+    alice: null,
+    bob: null
 }
 
 // fired when a message is published
 server.on('published', function(packet, client) {
     topics.forEach(function (item) {
-        const validUser = (client) ? client.id === clients[item] : false
-        if (packet.topic === `race/${item}` && validUser) {
+        const validUser = (client && clients[item]) ? client.id === clients[item].id : false
+        if (!validUser) {
+            return;
+        }
+
+        if (packet.topic === `race/${item}`) {
             const commands = JSON.parse(packet.payload.toString())
-            robot(commands, item)
+            robot(commands, clients[item])
+        } else if (packet.topic === `settings/${item}`) {
+            const settings = JSON.parse(packet.payload.toString())
+            if (clients[item]) {
+                clients[item].config(settings)
+                pino.info('Client', clients[item].player, 'keys', clients[item].keys)
+            }
         }
     })
 })
@@ -59,30 +70,27 @@ server.on('subscribed', function (topic, client) {
 
 // fired when a client connects
 server.on('clientConnected', function(client) {
-    if (clients[client.user] === 0) {
+    if (clients[client.user] === null) {
         pino.info('Client Connected:', client.id, '-', client.user)
-        clients[client.user] = client.id
+        clients[client.user] = new Client(client.id, client.user)
     } else {
-        pino.warn('Client already connected', clients[client.user])
+        pino.warn('Client already connected', clients[client.user].player)
     }
 })
 
 // fired when a client disconnects
 server.on('clientDisconnected', function(client) {
     // only the same user can disconnect
-    if (clients[client.user] === client.id) {
+    if (clients[client.user] && clients[client.user].id === client.id) {
         pino.info('Client Disconnected:', client.id, '-', client.user)
-        clients[client.user] = 0
+        clients[client.user] = null
     }
 })
 
 // Graceful Shutdown
 process.on('SIGINT', function() {
-    pino.info('Shutting down Mosca over WebSocket')
-    httpServ.close(function() {
-        pino.info('Shutting down Mosca')
-        server.close(function () {
-            process.exit()
-        })
+    pino.info('Shutting down Mosca')
+    server.close(function () {
+        process.exit()
     })
 })
