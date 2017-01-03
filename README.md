@@ -28,6 +28,16 @@ npm install # or yarn
     --credentials ./credentials.json \
     --authorize-publish '*/bob' \
     --authorize-subscribe '*/bob'
+
+./node_modules/.bin/mosca adduser carol carol \
+    --credentials ./credentials.json \
+    --authorize-publish '*/carol' \
+    --authorize-subscribe '*/carol'
+
+./node_modules/.bin/mosca adduser david david \
+    --credentials ./credentials.json \
+    --authorize-publish '*/david' \
+    --authorize-subscribe '*/david'
 ~~~
 
 ## Start the server
@@ -73,6 +83,10 @@ sudo apt-get install higan
 > Error: OpenGL 3.2 is not available. Select another video driver on the
     Advanced Configuration tab and restart higan.
 
-~~~
+~~~bash
 MESA_GL_VERSION_OVERRIDE=3.2 MESA_GLSL_VERSION_OVERRIDE=150 higan
 ~~~
+
+# Nintendo 64 Emulator
+
+[Mupen64plus](https://github.com/mupen64plus/mupen64plus-core/releases)
