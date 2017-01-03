@@ -49,6 +49,14 @@ npm start
 It's starts a MQTT Broker on port `1883` and a fallback
 for WebSocket on port `1884`.
 
+# Gamepad keyboard configuration
+
+Every game has a profile for quick configuration. Look at the folder
+`profiles/`.
+
+If you need to change any keyboard combination for SNES Top Gear, for example,
+go to `profiles/race/snes--top_gear`. Every player has it's own file.
+
 ## For production
 
 ### Install a proccess manager
@@ -90,3 +98,14 @@ MESA_GL_VERSION_OVERRIDE=3.2 MESA_GLSL_VERSION_OVERRIDE=150 higan
 # Nintendo 64 Emulator
 
 [Mupen64plus](https://github.com/mupen64plus/mupen64plus-core/releases)
+
+## Starting the game with predefined configuration
+
+For Mario Kart 64:
+
+```bash
+mupen64plus --configdir ./profiles/race/n64--mario_kart/
+```
+
+You can hack other configurations in
+`./profiles/race/n64--mario_kart/mupen64plus.cfg`.

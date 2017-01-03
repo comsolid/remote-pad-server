@@ -1,6 +1,8 @@
 {
     "left": "j",
     "right": "l",
+    "up": "i",
+    "down": "k",
     "B": "y",
     "A": "u",
     "Y": "o",

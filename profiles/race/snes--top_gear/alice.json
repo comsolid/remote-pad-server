@@ -1,6 +1,8 @@
 {
     "left": "left",
     "right": "right",
+    "up": "up",
+    "down": "down",
     "B": "b",
     "A": "a",
     "Y": "y",
