@@ -34,13 +34,17 @@ server.on('ready', () => {
 
 const topics = [
     'alice',
-    'bob'
+    'bob',
+    'carol',
+    'david'
 ]
 
 // holds the client data and settings
 let clients = {
     alice: null,
-    bob: null
+    bob: null,
+    carol: null,
+    david: null
 }
 
 // fired when a message is published
