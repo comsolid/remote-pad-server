@@ -79,13 +79,13 @@ pm2 monit
 
 # SNES Emulator
 
-Higan
+## Higan
 
 ~~~bash
 sudo apt-get install higan
 ~~~
 
-## Troubleshooting
+### Troubleshooting
 
 
 > Error: OpenGL 3.2 is not available. Select another video driver on the
@@ -94,6 +94,17 @@ sudo apt-get install higan
 ~~~bash
 MESA_GL_VERSION_OVERRIDE=3.2 MESA_GLSL_VERSION_OVERRIDE=150 higan
 ~~~
+
+## SNES9x
+
+Download from <http://snes9x.ipherswipsite.com/>
+
+Tested with Ubuntu 14.04 with SNES9x version 1.52.
+
+### Configuration
+
+Replace the file `~/.snes9x/snes9x.xml`
+with `./profiles/race/snes--top_gear/snes9x.xml`.
 
 # Nintendo 64 Emulator
 
