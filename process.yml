@@ -1,6 +1,6 @@
 apps:
   - script: ./src/index.js
-    name: 'remote-pad-broker'
+    name: 'remote-pad-server'
     watch: true
     env:
       NODE_ENV: development

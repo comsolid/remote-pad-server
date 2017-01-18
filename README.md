@@ -59,22 +59,31 @@ go to `profiles/race/snes--top_gear`. Every player has it's own file.
 
 ## For production
 
-### Install a proccess manager
+Download the [master](https://github.com/comsolid/remote-pad-server/archive/master.zip)
+branch to some folder. Unzip and use the `setup` script.
 
 ```bash
-sudo npm install pm2@latest -g
+cd remote-pad-server-master
+./scripts/setup.sh
 ```
 
-### Start the server
-
-```bash
-pm2 start process.yml
-```
+This will install all required software for running both server and client.
+**Debian/Ubuntu x86_64 only**.
 
 ### Monitoring
 
+After run the setup script.
+
 ```bash
 pm2 monit
+```
+
+```bash
+pm2 stop remote-pad-server remote-pad
+```
+
+```bash
+pm2 delete remote-pad-server remote-pad
 ```
 
 # SNES Emulator
