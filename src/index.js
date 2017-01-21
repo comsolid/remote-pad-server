@@ -1,5 +1,5 @@
 const pino = require('pino')()
-const robot = require('./robot-race.js')
+const pad = require('./robot-pad.js')
 const mosca = require('mosca')
 const loadAuthorizer = require('./load-authorizer.js')
 const Client = require('./client.js')
@@ -55,9 +55,9 @@ server.on('published', function(packet, client) {
             return;
         }
 
-        if (packet.topic === `race/${item}`) {
+        if (packet.topic === `pad/${item}`) {
             const commands = JSON.parse(packet.payload.toString())
-            robot(commands, clients[item])
+            pad(commands, clients[item])
         } else if (packet.topic === `settings/${item}`) {
             const settings = JSON.parse(packet.payload.toString())
             if (clients[item]) {
