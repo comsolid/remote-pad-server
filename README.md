@@ -113,7 +113,7 @@ Tested with Ubuntu 14.04 with SNES9x version 1.52.
 ### Configuration
 
 Replace the file `~/.snes9x/snes9x.xml`
-with `./profiles/race/snes--top_gear/snes9x.xml`.
+with `./profiles/race/snes--default/snes9x.xml`.
 
 # Nintendo 64 Emulator
 
@@ -124,8 +124,8 @@ with `./profiles/race/snes--top_gear/snes9x.xml`.
 For Mario Kart 64:
 
 ```bash
-mupen64plus --configdir ./profiles/race/n64--mario_kart/
+mupen64plus --configdir ./profiles/race/n64--default/
 ```
 
 You can hack other configurations in
-`./profiles/race/n64--mario_kart/mupen64plus.cfg`.
+`./profiles/race/n64--default/mupen64plus.cfg`.

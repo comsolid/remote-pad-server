@@ -6,6 +6,9 @@ function Client (id, player) {
     this.player = player
 }
 
+/**
+ * TODO: settings should be passed by the server itself, not the client!
+ */
 Client.prototype.config = function (settings) {
     this.pad = {
         type: settings.pad.type,

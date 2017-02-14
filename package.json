@@ -1,19 +1,17 @@
 {
-  "name": "remote-pad-broker",
+  "name": "remote-pad-server",
   "version": "1.0.0",
   "description": "Remote PAD MQTT Broker",
   "main": "src/index.js",
   "author": "Átila Camurça <camurca.home@gmail.com>",
-  "license": "MIT",
+  "license": "GPLv3",
   "dependencies": {
     "mosca": "^2.2.0",
     "pino": "^3.0.5",
-    "robotjs": "^0.4.5"
+    "robotjs": "^0.4.5",
+    "mqtt": "^2.1.3"
   },
   "scripts": {
     "start": "node ./src/index.js | pino"
-  },
-  "devDependencies": {
-    "mqtt": "^2.1.3"
   }
 }
