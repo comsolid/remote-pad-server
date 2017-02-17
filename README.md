@@ -38,6 +38,11 @@ npm install # or yarn
     --credentials ./credentials.json \
     --authorize-publish '*/david' \
     --authorize-subscribe '*/david'
+
+./node_modules/.bin/mosca adduser gui gui \
+    --credentials ./credentials.json \
+    --authorize-publish 'gui/*' \
+    --authorize-subscribe 'gui/*'
 ~~~
 
 ## Start the server
