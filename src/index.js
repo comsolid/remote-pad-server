@@ -1,6 +1,7 @@
 const pino = require('pino')()
 const pad = require('./robot-pad.js')
 const mosca = require('mosca')
+const path = require('path')
 const loadAuthorizer = require('./load-authorizer.js')
 const Client = require('./client.js')
 
@@ -9,7 +10,7 @@ const httpServ = http.createServer()
 
 const settings = {
     port: 1883,
-    credentialsFile: 'credentials.json'
+    credentialsFile: path.join(__dirname, '../credentials.json')
 }
 
 var server = new mosca.Server(settings)
@@ -32,12 +33,7 @@ server.on('ready', () => {
     pino.info(`Server is running at http://localhost:${settings.port}`)
 })
 
-const topics = [
-    'alice',
-    'bob',
-    'carol',
-    'david'
-]
+const topics = ['alice', 'bob', 'carol', 'david']
 
 // holds the client data and settings
 let clients = {
@@ -49,8 +45,10 @@ let clients = {
 
 // fired when a message is published
 server.on('published', function(packet, client) {
-    topics.forEach(function (item) {
-        const validUser = (client && clients[item]) ? client.id === clients[item].id : false
+    topics.forEach(function(item) {
+        const validUser = (client && clients[item])
+            ? client.id === clients[item].id
+            : false
         if (!validUser) {
             return;
         }
@@ -68,7 +66,7 @@ server.on('published', function(packet, client) {
     })
 })
 
-server.on('subscribed', function (topic, client) {
+server.on('subscribed', function(topic, client) {
     pino.info(client.id, '-', client.user, 'subscribed to', topic)
 })
 
@@ -91,10 +89,23 @@ server.on('clientDisconnected', function(client) {
     }
 })
 
-// Graceful Shutdown
-process.on('SIGINT', function() {
+var gracefulShutdown = function() {
+    console.log("Received kill signal, shutting down gracefully.")
     pino.info('Shutting down Mosca')
-    server.close(function () {
+    server.close(function() {
+        console.log("Closed out remaining connections.")
         process.exit()
     })
-})
+
+    // if after
+    setTimeout(function() {
+        console.error("Could not close connections in time, forcefully shutting down")
+        process.exit()
+    }, 10 * 1000)
+}
+
+// listen for TERM signal .e.g. kill
+process.on('SIGTERM', gracefulShutdown);
+
+// listen for INT signal e.g. Ctrl-C
+process.on('SIGINT', gracefulShutdown);
