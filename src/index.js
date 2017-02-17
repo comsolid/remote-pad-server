@@ -40,7 +40,8 @@ let clients = {
     alice: null,
     bob: null,
     carol: null,
-    david: null
+    david: null,
+    gui: null
 }
 
 // fired when a message is published
@@ -75,6 +76,8 @@ server.on('clientConnected', function(client) {
     if (clients[client.user] === null) {
         pino.info('Client Connected:', client.id, '-', client.user)
         clients[client.user] = new Client(client.id, client.user)
+
+        notifyGui(client.user, true)
     } else {
         pino.warn('Client already connected', clients[client.user].player)
     }
@@ -86,8 +89,24 @@ server.on('clientDisconnected', function(client) {
     if (clients[client.user] && clients[client.user].id === client.id) {
         pino.info('Client Disconnected:', client.id, '-', client.user)
         clients[client.user] = null
+
+        notifyGui(client.user, false)
     }
 })
+
+function notifyGui(player, isConnected) {
+    server.publish({
+        topic: 'gui/player',
+        payload: JSON.stringify({
+            name: player,
+            connected: isConnected,
+            qos: 1,
+            retain: false
+        })
+    }, () => {
+        pino.info('gui notified')
+    })
+}
 
 var gracefulShutdown = function() {
     console.log("Received kill signal, shutting down gracefully.")
