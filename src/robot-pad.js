@@ -5,7 +5,7 @@ module.exports = function (commands, player) {
         let key = player.keys[prop]
         if (key) {
             let toggle = (commands[prop] ? 'down' : 'up')
-            robot.keyToggle(player.keys[prop], toggle)
+            robot.keyToggle(key, toggle)
         }
     }
 }

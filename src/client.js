@@ -1,5 +1,6 @@
 
 const fs = require('fs')
+const path = require('path')
 
 function Client (id, player) {
     this.id = id
@@ -15,11 +16,15 @@ Client.prototype.config = function (settings) {
         profile: settings.pad.profile
     }
 
-    const path = `../profiles/${this.pad.type}/${this.pad.profile}/${this.player}.json`
-    if (fs.existsSync(__dirname + '/' + path)) {
-        this.keys = require(path)
+    const profilePath = `../profiles/${this.pad.type}/${this.pad.profile}/${this.player}.json`
+    if (fs.existsSync(__dirname + '/' + profilePath)) {
+        this.keys = require(profilePath)
     } else {
-        throw `Path '${path}' do not exists`
+        this.keys = require(`${__dirname}/../profiles/fallback/nobody.json`)
+        throw `Configuration for user ${this.player} with profile \
+${this.pad.type}/${this.pad.profile} not found. Path \
+'${path.join(__dirname, profilePath)}' does not exists. \
+Starting in fallback mode, it could not work properly.`
     }
 };
 

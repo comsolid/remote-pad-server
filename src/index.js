@@ -60,7 +60,12 @@ server.on('published', function(packet, client) {
         } else if (packet.topic === `settings/${item}`) {
             const settings = JSON.parse(packet.payload.toString())
             if (clients[item]) {
-                clients[item].config(settings)
+                try {
+                    clients[item].config(settings)
+                } catch (err) {
+                    pino.error(err)
+                    notifyPlayer(clients[item].player, err, 'error')
+                }
                 pino.info('Client', clients[item].player, 'keys', clients[item].keys)
             }
         }
@@ -105,6 +110,21 @@ function notifyGui(player, isConnected) {
         })
     }, () => {
         pino.info('gui notified')
+    })
+}
+
+function notifyPlayer(player, message, messageType) {
+    server.publish({
+        topic: `message/${player}`,
+        payload: JSON.stringify({
+            message: message,
+            messageType: messageType,
+            timestamp: new Date(),
+            qos: 1,
+            retain: false
+        })
+    }, () => {
+        pino.info(`Player ${player} notified`)
     })
 }
 

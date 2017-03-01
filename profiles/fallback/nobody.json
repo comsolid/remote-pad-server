@@ -3,8 +3,8 @@
     "right": "right",
     "up": "up",
     "down": "down",
-    "B": "control",
-    "A": "shift",
-    "Y": "space",
-    "X": "z"
+    "B": "shift",
+    "A": "z",
+    "Y": "control",
+    "X": "space"
 }
