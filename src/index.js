@@ -44,32 +44,52 @@ let clients = {
     gui: null
 }
 
+let profile = process.env.PROFILE || 'n64--default'
+
 // fired when a message is published
 server.on('published', function(packet, client) {
-    topics.forEach(function(item) {
-        const validUser = (client && clients[item])
-            ? client.id === clients[item].id
+    if (packet.topic === 'gui/profile') {
+        profile = packet.payload.toString()
+        // update each player
+        for (var i = 0; i < topics.length; i++) {
+            console.log('configuring', topics[i])
+            const c = clients[topics[i]]
+            if (c) {
+                c.pad.profile = profile
+                c.setupKeys()
+                pino.info(`Client '${c.player}' \
+using profile '${c.pad.profile}' with keys`, c.keys)
+            }
+        }
+    } else {
+        const [ type, player ] = packet.topic.split('/')
+        const validUser = (client && clients[player])
+            ? client.id === clients[player].id
             : false
         if (!validUser) {
             return;
         }
 
-        if (packet.topic === `pad/${item}`) {
+        if (type.lastIndexOf('pad', 0) == 0) {
             const commands = JSON.parse(packet.payload.toString())
-            pad(commands, clients[item])
-        } else if (packet.topic === `settings/${item}`) {
+            pad(commands, clients[player])
+        } else if (type.lastIndexOf('settings', 0) == 0) {
             const settings = JSON.parse(packet.payload.toString())
-            if (clients[item]) {
+            // override user settings
+            // TODO: remove profile selection from remote-pad web
+            settings.pad.profile = profile
+            if (clients[player]) {
                 try {
-                    clients[item].config(settings)
+                    clients[player].config(settings)
                 } catch (err) {
                     pino.error(err)
-                    notifyPlayer(clients[item].player, err, 'error')
+                    notifyPlayer(clients[player].player, err, 'error')
                 }
-                pino.info('Client', clients[item].player, 'keys', clients[item].keys)
+                pino.info(`Client '${clients[player].player}' \
+using profile '${clients[player].pad.profile}' with keys`, clients[player].keys)
             }
         }
-    })
+    }
 })
 
 server.on('subscribed', function(topic, client) {
