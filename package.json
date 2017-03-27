@@ -1,6 +1,6 @@
 {
   "name": "remote-pad-server",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Remote PAD MQTT Broker",
   "main": "src/index.js",
   "author": "Átila Camurça <camurca.home@gmail.com>",
