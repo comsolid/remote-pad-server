@@ -59,6 +59,7 @@ server.on('published', function(packet, client) {
                 c.setupKeys()
                 pino.info(`Client '${c.player}' \
 using profile '${c.pad.profile}' with keys`, c.keys)
+                notifyProfile(profile, c.player)
             }
         }
     } else {
@@ -81,6 +82,7 @@ using profile '${c.pad.profile}' with keys`, c.keys)
             if (clients[player]) {
                 try {
                     clients[player].config(settings)
+                    notifyProfile(profile, player)
                 } catch (err) {
                     pino.error(err)
                     notifyPlayer(clients[player].player, err, 'error')
@@ -94,6 +96,7 @@ using profile '${clients[player].pad.profile}' with keys`, clients[player].keys)
 
 server.on('subscribed', function(topic, client) {
     pino.info(client.id, '-', client.user, 'subscribed to', topic)
+    notifyProfile(profile, client.user)
 })
 
 // fired when a client connects
@@ -106,6 +109,7 @@ server.on('clientConnected', function(client) {
     } else {
         pino.warn('Client already connected', clients[client.user].player)
     }
+    notifyProfile(profile, client.user)
 })
 
 // fired when a client disconnects
@@ -145,6 +149,19 @@ function notifyPlayer(player, message, messageType) {
         })
     }, () => {
         pino.info(`Player ${player} notified`)
+    })
+}
+
+function notifyProfile(profile, player) {
+    server.publish({
+        topic: `profile/${player}`,
+        payload: JSON.stringify({
+            profile: profile,
+            qos: 1,
+            retain: false
+        })
+    }, () => {
+        pino.info(`Profile change notified to ${player}, new value: ${profile}`)
     })
 }
 
