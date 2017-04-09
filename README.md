@@ -4,11 +4,18 @@ MQTT Broker responsible to execute commands sent by
 [remote-pad](https://github.com/comsolid/remote-pad).
 
 The idea is receive data from a mobile simulating for
-example a Steering wheel for a race game (Top Gear),
-and act as if the keyboard is sending commands
-to the emulator.
+example a Steering wheel for a race game (SNES Top Gear or
+Nintendo 64 Mario Kart), and act as if the keyboard is
+sending commands to the emulator.
 
 # Getting Started
+
+## Getting Started
+
+You can install [Remote Pad GUI](https://github.com/comsolid/remote-pad-gui)
+to start a desktop app.
+
+# Development
 
 ## Install dependencies
 
@@ -60,7 +67,7 @@ Every game has a profile for quick configuration. Look at the folder
 `profiles/`.
 
 If you need to change any keyboard combination for SNES Top Gear, for example,
-go to `profiles/race/snes--top_gear`. Every player has it's own file.
+go to `profiles/race/snes--default`. Every player has it's own file.
 
 ## For production
 
