@@ -67,28 +67,26 @@ using profile '${c.pad.profile}' with keys`, c.keys)
         const validUser = (client && clients[player])
             ? client.id === clients[player].id
             : false
-        if (!validUser) {
-            return;
-        }
-
-        if (type.lastIndexOf('pad', 0) == 0) {
-            const commands = JSON.parse(packet.payload.toString())
-            pad(commands, clients[player])
-        } else if (type.lastIndexOf('settings', 0) == 0) {
-            const settings = JSON.parse(packet.payload.toString())
-            // override user settings
-            // TODO: remove profile selection from remote-pad web
-            settings.pad.profile = profile
-            if (clients[player]) {
-                try {
-                    clients[player].config(settings)
-                    notifyProfile(profile, player)
-                } catch (err) {
-                    pino.error(err)
-                    notifyPlayer(clients[player].player, err, 'error')
+        if (validUser) {
+            if (type.lastIndexOf('pad', 0) == 0) {
+                const commands = JSON.parse(packet.payload.toString())
+                pad(commands, clients[player])
+            } else if (type.lastIndexOf('settings', 0) == 0) {
+                const settings = JSON.parse(packet.payload.toString())
+                // override user settings
+                // TODO: remove profile selection from remote-pad web
+                settings.pad.profile = profile
+                if (clients[player]) {
+                    try {
+                        clients[player].config(settings)
+                        notifyProfile(profile, player)
+                    } catch (err) {
+                        pino.error(err)
+                        notifyPlayer(clients[player].player, err, 'error')
+                    }
+                    pino.info(`Client '${clients[player].player}' \
+                    using profile '${clients[player].pad.profile}' with keys`, clients[player].keys)
                 }
-                pino.info(`Client '${clients[player].player}' \
-using profile '${clients[player].pad.profile}' with keys`, clients[player].keys)
             }
         }
     }
