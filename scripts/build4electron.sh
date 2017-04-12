@@ -27,7 +27,7 @@ HEREDOC
 
 _install() {
     _init
-	_install_dependencies
+	_check_dependencies
     _setup_production_server
     _end
 }
@@ -52,39 +52,27 @@ _init() {
     cd electron
 }
 
-_install_dependencies() {
-	printf "Installing all dependencies.\n"
-    printf "It needs to install new software.\n"
-    sudo apt-get --quiet update
-    sudo apt-get --quiet -y install \
-        curl \
-        build-essential \
-        libxtst-dev \
-        libpng++-dev \
-        libssl-dev
+_check_dependencies() {
+	printf "Checking all dependencies.\n"
     if _command_exists node ; then
-        printf "Node js found %s\n" $(node --version)
+        printf "NodeJS found %s\n" $(node --version)
     else
-        curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
-        sudo apt-get install -y nodejs
-        printf "Node js %s installed\n" $(node --version)
+        printf "NodeJS not found.\nTry run ./scripts/build4electron-setup.sh.\n"
+        exit 1
     fi
 
     if _command_exists node-gyp ; then
         printf "node-gyp found %s\n" $(node-gyp --version)
     else
-        printf "Installing node-gyp\n"
-        sudo npm install --global node-gyp
+        printf "node-gyp not found.\nTry run ./scripts/build4electron-setup.sh.\n"
+        exit 1
     fi
 
     if _command_exists yarn ; then
         printf "Yarn found %s\n" $(yarn --version)
     else
-        curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-        echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-        sudo apt-get update
-        sudo apt-get install yarn
-        printf "Yarn %s installed\n" $(yarn --version)
+        printf "Yarn not found.\nTry run ./scripts/build4electron-setup.sh.\n"
+        exit 1
     fi
 }
 
