@@ -6,5 +6,6 @@
     "B": "shift",
     "A": "z",
     "Y": "control",
-    "X": "space"
+    "X": "space",
+    "start": "enter"
 }

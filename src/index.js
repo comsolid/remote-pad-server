@@ -69,8 +69,13 @@ using profile '${c.pad.profile}' with keys`, c.keys)
             : false
         if (validUser) {
             if (type.lastIndexOf('pad', 0) == 0) {
-                const commands = JSON.parse(packet.payload.toString())
-                pad(commands, clients[player])
+                try {
+                    const commands = JSON.parse(packet.payload.toString())
+                    pad(commands, clients[player])
+                } catch (err) {
+                    pino.error(err)
+                    notifyPlayer(clients[player].player, err, 'error')
+                }
             } else if (type.lastIndexOf('settings', 0) == 0) {
                 const settings = JSON.parse(packet.payload.toString())
                 // override user settings
