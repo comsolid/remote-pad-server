@@ -1,0 +1,11 @@
+{
+    "left": "left",
+    "right": "right",
+    "up": "up",
+    "down": "down",
+    "B": "shift",
+    "A": "z",
+    "Y": "control",
+    "X": "space",
+    "start": "enter"
+}
